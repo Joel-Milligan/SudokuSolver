@@ -4,20 +4,27 @@
 
 #define WIDTH 9
 #define HEIGHT 9
+#define H_LINE "---------------------\n"
 
 int **read_puzzle_from_file(char *file_name);
-// TODO void print_sudoku(int **sudoku_puzzle);
+void print_puzzle(int **puzzle);
 
 int main() {
+	int **current_puzzle = read_puzzle_from_file("example.txt");
+	if(current_puzzle == NULL) {
+		exit(EXIT_FAILURE);
+	}
+
+	print_puzzle(current_puzzle);
 	return 0;
 }
 
 int **read_puzzle_from_file(char *file_name) {
 	// Initialise 2D puzzle array
 	int **puzzle_array = NULL;
-	puzzle_array = malloc(WIDTH * sizeof(int *));
-	for(int i = 0; i < WIDTH; i++) {
-		puzzle_array[i] = malloc(HEIGHT * sizeof(int));
+	puzzle_array = malloc(HEIGHT * sizeof(int *));
+	for(int i = 0; i < HEIGHT; i++) {
+		puzzle_array[i] = malloc(WIDTH * sizeof(int));
 	}
 
 	// Open file to take puzzle from
@@ -29,15 +36,30 @@ int **read_puzzle_from_file(char *file_name) {
 		return NULL;
 	} else {
 		char c[2] = { 'a', '\0'  };
-		for(int x = 0; x < WIDTH; x++) {
-			for(int y = 0; y < HEIGHT; y++) {
-				while(1) {
-					c[0] = fgetc(p_file);
-					if(isdigit(c)) {break;}
+		for(int y = 0; y < HEIGHT; y++) {
+			for(int x = 0; x < WIDTH; x++) {
+				c[0] = fgetc(p_file);
+				if(c[0] != '\n') {
+					puzzle_array[x][y] = atoi(c);
+					// printf("%d", puzzle_array[x][y]);
 				}
-				puzzle_array[x][y] = atoi(c);
 			}
 		}
 	}
 	return puzzle_array;
+}
+
+void print_puzzle(int **puzzle) {
+	for(int y = 0; y < HEIGHT; y++) {
+		if(y == 3 || y == 6) {printf(H_LINE);}
+
+		for(int x = 0; x < WIDTH; x++) {
+			if(x == 3 || x == 6) {
+				printf("| %d ", puzzle[x][y]);
+			} else {
+				printf("%d ", puzzle[x][y]);
+			}
+		}
+		printf("\n");
+	}
 }
