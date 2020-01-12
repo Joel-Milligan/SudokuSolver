@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <string.h>
 
 #define SIZE 9
 #define H_LINE "---------------------\n"
@@ -58,11 +59,15 @@ int **read_puzzle_from_file(char *file_name) {
 		char c[2] = { 'a', '\0'  };
 		for(int y = 0; y < SIZE; y++) {
 			for(int x = 0; x < SIZE; x++) {
-				c[0] = fgetc(p_file);
-				if(c[0] != '\n') {
-					puzzle_array[x][y] = atoi(c);
-					// printf("%d", puzzle_array[x][y]);
+				while(1) {
+					c[0] = fgetc(p_file);
+					if(isdigit(c[0]) != 0) {
+						puzzle_array[x][y] = atoi(c);
+						break;
+					}
 				}
+				// printf("%d", puzzle_array[x][y]);
+				// TODO This line gives some insight into the file io bug
 			}
 		}
 	}
