@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <string.h>
 
 #define WIDTH 9
 #define HEIGHT 9
@@ -41,8 +42,9 @@ int **read_puzzle_from_file(char *file_name) {
 				c[0] = fgetc(p_file);
 				if(c[0] != '\n') {
 					puzzle_array[x][y] = atoi(c);
-					// printf("%d", puzzle_array[x][y]);
 				}
+				// printf("%d", puzzle_array[x][y]);
+				// TODO This line gives some insight into the file io bug
 			}
 		}
 	}
@@ -50,10 +52,12 @@ int **read_puzzle_from_file(char *file_name) {
 }
 
 void print_puzzle(int **puzzle) {
-	for(int y = 0; y < HEIGHT; y++) {
+	int x, y = 0;
+	
+	for(y = 0; y < HEIGHT; y++) {
 		if(y == 3 || y == 6) {printf(H_LINE);}
 
-		for(int x = 0; x < WIDTH; x++) {
+		for(x = 0; x < WIDTH; x++) {
 			if(x == 3 || x == 6) {
 				printf("| %d ", puzzle[x][y]);
 			} else {
